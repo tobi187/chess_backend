@@ -20,14 +20,17 @@ def connect(sid, environ):
 def create(sid):
     token = secrets.token_urlsafe(15)
     sio.enter_room(sid, token)
-    pass
+    return {"roomKey": token}
 
 
 @sio.event
 def join(sid, data):
     game_key = data["key"]
+    sio.enter_room(sid, game_key)
     sio.emit("game_start", room=game_key, data={
              "message": "wowo its starting"})
+
+    return 200
 
 
 def move(sid, data):
